@@ -39,6 +39,10 @@ app.use(
   "/api/contact",
   require("./routes/contactRoutes")
 );
+app.use(
+  "/api/address",
+  require("./routes/addressRoutes")
+);
 
 app.listen(
   process.env.PORT,
