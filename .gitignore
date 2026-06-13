@@ -35,5 +35,6 @@ Thumbs.db
 tmp/
 temp/
 
+createAdmin.js
 # Package lock (optional)
 # package-lock.json
