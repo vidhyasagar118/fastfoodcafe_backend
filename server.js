@@ -44,6 +44,10 @@ app.use(
   require("./routes/addressRoutes")
 );
 
+app.use(
+  "/api/dashboard",
+  require("./routes/dashboardRoutes")
+);
 app.listen(
   process.env.PORT,
   () =>
