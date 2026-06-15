@@ -211,15 +211,26 @@ const getProductById = async (req,res) => {
 };
 
 const incrementView = async (req, res) => {
-  const product = await Product.findByIdAndUpdate(
-    req.params.id,
-    {
-      $inc: { views: 1 },
-    },
-    { new: true }
-  );
+  try {
+    const product =
+      await Product.findByIdAndUpdate(
+        req.params.id,
+        {
+          $inc: {
+            views: 1,
+          },
+        },
+        {
+          new: true,
+        }
+      );
 
-  res.json(product);
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
 };
 module.exports = {
   getProducts,

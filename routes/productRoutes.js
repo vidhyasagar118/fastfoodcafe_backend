@@ -9,6 +9,7 @@ const {
   updateProduct,
   addReview,
   getProductById,
+  incrementView,
 } = require("../controllers/productController");
 
 router.get("/", getProducts);
