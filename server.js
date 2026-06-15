@@ -52,6 +52,10 @@ app.use(
   "/api/users",
   require("./routes/userRoutes")
 );
+app.use(
+  "/api/stats",
+  require("./routes/productStatsRoutes")
+);
 app.listen(
   process.env.PORT,
   () =>

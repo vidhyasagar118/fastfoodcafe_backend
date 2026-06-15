@@ -96,11 +96,81 @@ const updateProduct = async (req, res) => {
     });
   }
 };
+const addReview = async (req, res) => {
+  try {
+    const product =
+      await Product.findById(req.params.id);
+
+    const {
+      userName,
+      email,
+      rating,
+      comment,
+    } = req.body;
+
+    const alreadyReviewed =
+      product.reviews.find(
+        (r) => r.email === email
+      );
+
+    if (alreadyReviewed) {
+      return res.status(400).json({
+        message:
+          "Already Reviewed",
+      });
+    }
+
+    product.reviews.push({
+      userName,
+      email,
+      rating,
+      comment,
+    });
+
+    product.numReviews =
+      product.reviews.length;
+
+    product.rating =
+      product.reviews.reduce(
+        (acc, item) =>
+          acc + item.rating,
+        0
+      ) / product.reviews.length;
+
+    await product.save();
+
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+const getProductById = async (req,res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if(!product){
+      return res.status(404).json({
+        message:"Product not found"
+      });
+    }
+
+    res.json(product);
+  } catch(err){
+    res.status(500).json({
+      message: err.message
+    });
+  }
+};
 module.exports = {
   getProducts,
   addProduct,
   deleteProduct,
   getProductsByCategory,
   updateDiscount,
-  updateProduct
+  updateProduct,
+  addReview,
+  getProductById,
 };

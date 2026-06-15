@@ -6,28 +6,31 @@ const {
   deleteProduct,
   getProductsByCategory,
   updateDiscount,
-  updateProduct
+  updateProduct,
+  addReview,
+  getProductById,
 } = require("../controllers/productController");
 
 router.get("/", getProducts);
-
-router.post("/add", addProduct);
-
-router.delete("/:id", deleteProduct);
 
 router.get(
   "/category/:category",
   getProductsByCategory
 );
 
-router.put(
-  "/discount/:id",
-  updateDiscount
+// ADD THIS
+router.get("/:id", getProductById);
+
+router.post("/add", addProduct);
+
+router.post(
+  "/review/:id",
+  addReview
 );
 
-router.put(
-  "/:id",
-  updateProduct
-);
+router.put("/discount/:id", updateDiscount);
 
+router.put("/:id", updateProduct);
+
+router.delete("/:id", deleteProduct);
 module.exports = router;
