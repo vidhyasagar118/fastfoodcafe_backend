@@ -43,6 +43,18 @@ numReviews: {
   type: Number,
   default: 0,
 },
+reviewedUsers: [
+  {
+    type: String
+  }
+]
+,
+stock: {
+  type: Number,
+  default: 10,
+},
+discountStart: Date,
+discountEnd: Date,
 });
 
 module.exports =

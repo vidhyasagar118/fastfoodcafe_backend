@@ -4,26 +4,59 @@ const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
 
-    res.status(200).json(products);
+    const now = new Date();
 
-  } catch (error) {
+    const updatedProducts = products.map((p) => {
+      const product = p.toObject();
 
-    res.status(500).json({
-      message: error.message
+      if (
+        product.discountStart &&
+        product.discountEnd &&
+        (now < new Date(product.discountStart) ||
+          now > new Date(product.discountEnd))
+      ) {
+        product.discount = 0;
+      }
+
+      return product;
     });
 
+    res.status(200).json(updatedProducts);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
   }
 };
 const getProductsByCategory = async (req, res) => {
   try {
     const products = await Product.find({
-      category: req.params.category
+      category: req.params.category,
     });
 
-    res.status(200).json(products);
+    const now = new Date();
+
+    const updatedProducts = products.map((p) => {
+      const product = p.toObject();
+
+      if (
+        product.discountStart &&
+        product.discountEnd &&
+        (
+          now < new Date(product.discountStart) ||
+          now > new Date(product.discountEnd)
+        )
+      ) {
+        product.discount = 0;
+      }
+
+      return product;
+    });
+
+    res.status(200).json(updatedProducts);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -98,8 +131,9 @@ const updateProduct = async (req, res) => {
 };
 const addReview = async (req, res) => {
   try {
-    const product =
-      await Product.findById(req.params.id);
+    const Order = require("../models/Order");
+
+    const product = await Product.findById(req.params.id);
 
     const {
       userName,
@@ -108,6 +142,20 @@ const addReview = async (req, res) => {
       comment,
     } = req.body;
 
+    // Check Delivered Order
+    const deliveredOrder = await Order.findOne({
+      email,
+      status: "Delivered",
+      "items._id": req.params.id,
+    });
+
+    if (!deliveredOrder) {
+      return res.status(400).json({
+        message:
+          "You can review only purchased products",
+      });
+    }
+
     const alreadyReviewed =
       product.reviews.find(
         (r) => r.email === email
@@ -115,8 +163,7 @@ const addReview = async (req, res) => {
 
     if (alreadyReviewed) {
       return res.status(400).json({
-        message:
-          "Already Reviewed",
+        message: "Already Reviewed",
       });
     }
 
@@ -132,8 +179,7 @@ const addReview = async (req, res) => {
 
     product.rating =
       product.reviews.reduce(
-        (acc, item) =>
-          acc + item.rating,
+        (acc, item) => acc + item.rating,
         0
       ) / product.reviews.length;
 
@@ -146,7 +192,6 @@ const addReview = async (req, res) => {
     });
   }
 };
-
 const getProductById = async (req,res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -164,6 +209,7 @@ const getProductById = async (req,res) => {
     });
   }
 };
+
 module.exports = {
   getProducts,
   addProduct,
