@@ -27,7 +27,7 @@ router.post(
   "/review/:id",
   addReview
 );
-
+router.put("/view/:id", incrementView);
 router.put("/discount/:id", updateDiscount);
 
 router.put("/:id", updateProduct);

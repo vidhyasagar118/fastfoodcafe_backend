@@ -55,6 +55,15 @@ stock: {
 },
 discountStart: Date,
 discountEnd: Date,
+views: {
+  type: Number,
+  default: 0,
+},
+
+soldCount: {
+  type: Number,
+  default: 0,
+},
 });
 
 module.exports =

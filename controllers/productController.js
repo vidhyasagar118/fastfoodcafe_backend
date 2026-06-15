@@ -210,6 +210,17 @@ const getProductById = async (req,res) => {
   }
 };
 
+const incrementView = async (req, res) => {
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    {
+      $inc: { views: 1 },
+    },
+    { new: true }
+  );
+
+  res.json(product);
+};
 module.exports = {
   getProducts,
   addProduct,
@@ -219,4 +230,5 @@ module.exports = {
   updateProduct,
   addReview,
   getProductById,
+  incrementView,
 };

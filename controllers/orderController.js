@@ -29,9 +29,10 @@ const placeOrder = async (req, res) => {
       await Product.findByIdAndUpdate(
         item._id,
         {
-          $inc: {
-            stock: -item.qty,
-          },
+         $inc: {
+  stock: -item.qty,
+  soldCount: item.qty,
+}
         }
       );
     }

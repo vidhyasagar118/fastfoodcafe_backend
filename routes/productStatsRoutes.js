@@ -4,6 +4,24 @@ const router = express.Router();
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
+router.get("/trending", async (req, res) => {
+
+  const products = await Product.find();
+
+  const trending = products
+    .map((p) => ({
+      ...p.toObject(),
+      score:
+        p.soldCount * 5 +
+        p.views * 2 +
+        p.rating * 20,
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 6);
+
+  res.json(trending);
+});
+
 router.get("/bestseller", async (req, res) => {
   try {
     const orders = await Order.find();
